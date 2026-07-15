@@ -1,6 +1,6 @@
-# Countrywise City
+# CountryCity JS
 
-Countrywise City is a TypeScript package for country, state/province, city,
+CountryCity JS is a TypeScript package for country, state/province, city,
 flag, ISO, currency, phone-code, coordinate and location search data.
 
 The package ships local JSON data with the npm package. It does not require a
@@ -33,7 +33,7 @@ rendering. It is not intended as a direct browser bundle.
 ## Installation
 
 ```bash
-npm install @mdimamkhan/countrywisecity
+npm install countrycity-js
 ```
 
 ## Quick Start
@@ -45,7 +45,7 @@ import {
   getCountryByCode,
   getStatesOfCountry,
   searchCountries,
-} from "@mdimamkhan/countrywisecity";
+} from "countrycity-js";
 
 const bangladesh = await getCountryByCode("BD");
 const usStates = await getStatesOfCountry("US");
@@ -66,7 +66,7 @@ const {
   getCountries,
   getCountryByCode,
   getStatesOfCountry,
-} = require("@mdimamkhan/countrywisecity");
+} = require("countrycity-js");
 
 async function main() {
   const countries = await getCountries();
@@ -288,7 +288,7 @@ interface City {
 
 ## System Design
 
-Countrywise City is designed around predictable server-side data access instead
+CountryCity JS is designed around predictable server-side data access instead
 of bundling all city data into JavaScript.
 
 ### Data Layout

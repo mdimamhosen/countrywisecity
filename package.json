@@ -1,5 +1,5 @@
 {
-  "name": "@mdimamkhan/countrywisecity",
+  "name": "countrycity-js",
   "version": "1.0.0",
   "description": "A TypeScript library for countries, flags, states, provinces, cities, ISO codes, currencies and geographic search.",
   "keywords": [
@@ -22,13 +22,13 @@
     "url": "https://github.com/mdimamhosen"
   },
   "license": "ODbL-1.0",
-  "homepage": "https://github.com/mdimamhosen/countrywisecity#readme",
+  "homepage": "https://github.com/mdimamhosen/countrycity-js#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mdimamhosen/countrywisecity.git"
+    "url": "git+https://github.com/mdimamhosen/countrycity-js.git"
   },
   "bugs": {
-    "url": "https://github.com/mdimamhosen/countrywisecity/issues"
+    "url": "https://github.com/mdimamhosen/countrycity-js/issues"
   },
   "type": "module",
   "main": "./dist/index.cjs",
