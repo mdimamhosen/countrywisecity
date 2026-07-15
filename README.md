@@ -20,15 +20,19 @@ runtime dependency on another country-state-city npm package.
 - TypeScript types
 - ESM and CommonJS builds
 - Lazy data loading from packaged JSON files
+- Backend usage through Node.js file-system loading
+- Frontend usage through the browser-safe fetch client
 
 ## Requirements
 
 - Node.js 20 or newer
 - npm, pnpm, yarn or another Node package manager
 
-This package reads packaged JSON files from disk, so it is designed for Node.js
-runtime environments such as servers, scripts, CLIs, build tools and server-side
-rendering. It is not intended as a direct browser bundle.
+The default entrypoint is designed for Node.js runtimes such as servers,
+scripts, CLIs, build tools and server-side rendering.
+
+Frontend applications can use the browser entrypoint, `countrycity-js/browser`,
+with the packaged JSON files served as static assets.
 
 ## Installation
 
@@ -37,6 +41,8 @@ npm install countrycity-js
 ```
 
 ## Quick Start
+
+### Node.js And Backend
 
 ```typescript
 import {
@@ -81,15 +87,126 @@ async function main() {
 main();
 ```
 
-## Browser Applications
+## Browser And Frontend Usage
 
-CountryCity JS uses Node.js file-system APIs to read packaged JSON files. Do not
-import it directly inside browser-only code such as React client components,
-Vite client bundles or plain browser scripts.
+Use `countrycity-js/browser` in browser code. It does not import Node.js
+modules. It loads JSON with `fetch()` from a public static data directory.
 
-Use it from your backend and expose the location data through API routes.
+### 1. Copy Data To Public Assets
 
-### Example API Routes
+Copy the package data into your app's public/static folder.
+
+macOS or Linux:
+
+```bash
+mkdir -p public/countrycity-data
+cp -R node_modules/countrycity-js/dist/data/* public/countrycity-data/
+```
+
+Windows PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force public/countrycity-data
+Copy-Item -Recurse node_modules/countrycity-js/dist/data/* public/countrycity-data/
+```
+
+Your app should serve:
+
+```text
+/countrycity-data/manifest.json
+/countrycity-data/countries.json
+/countrycity-data/United_States-US/states.json
+/countrycity-data/United_States-US/California-CA/cities.json
+```
+
+### 2. Use The Browser Client
+
+```typescript
+import { createLocationClient } from "countrycity-js/browser";
+
+const locations = createLocationClient({
+  baseUrl: "/countrycity-data",
+});
+
+const countries = await locations.getCountries();
+const states = await locations.getStatesOfCountry("US");
+const cities = await locations.getCitiesOfState("US", "CA");
+
+console.log(countries.length);
+console.log(states.length);
+console.log(cities.some((city) => city.name === "Los Angeles"));
+```
+
+### Browser API
+
+`createLocationClient()` returns browser-safe versions of the same async API:
+
+```typescript
+const locations = createLocationClient({
+  baseUrl: "/countrycity-data",
+});
+
+await locations.getCountries();
+await locations.getCountryByCode("BD");
+await locations.getStatesOfCountry("US");
+await locations.getCitiesOfState("US", "CA");
+await locations.searchCountries("bangla");
+await locations.searchStates("US", "california");
+await locations.searchCities("US", "CA", "los");
+locations.clearLocationCache();
+```
+
+### React Example
+
+```tsx
+import { useEffect, useMemo, useState } from "react";
+import { createLocationClient, type Country } from "countrycity-js/browser";
+
+export function CountrySelect() {
+  const locations = useMemo(
+    () =>
+      createLocationClient({
+        baseUrl: "/countrycity-data",
+      }),
+    [],
+  );
+  const [countries, setCountries] = useState<Country[]>([]);
+
+  useEffect(() => {
+    void locations.getCountries().then(setCountries);
+  }, [locations]);
+
+  return (
+    <select>
+      {countries.map((country) => (
+        <option key={country.iso2} value={country.iso2}>
+          {country.emoji} {country.name}
+        </option>
+      ))}
+    </select>
+  );
+}
+```
+
+### Cascading Select Pattern
+
+For frontend forms, load data in this order:
+
+1. Load countries when the form opens.
+2. When a country is selected, load states/provinces for that country.
+3. When a state/province is selected, load cities for that state/province.
+4. Store the final label in the shape your product needs, for example
+   `"City, State, Country"`.
+
+This keeps the browser bundle small and avoids loading every city into the
+client at once.
+
+## Backend API Pattern
+
+You can also use the Node/backend entrypoint to expose your own API routes.
+This is useful when you do not want to copy static data into the frontend app.
+
+### Express Example
 
 ```typescript
 import express from "express";
@@ -129,19 +246,6 @@ GET /api/locations/countries
 GET /api/locations/states/:countryCode
 GET /api/locations/cities/:countryCode/:stateCode
 ```
-
-### Cascading Select Pattern
-
-For forms, load data in this order:
-
-1. Load countries when the form opens.
-2. When a country is selected, load states/provinces for that country.
-3. When a state/province is selected, load cities for that state/province.
-4. Store the final label in the shape your product needs, for example
-   `"City, State, Country"`.
-
-This keeps the browser bundle small and avoids loading every city into the
-client at once.
 
 ## API Overview
 
@@ -375,6 +479,8 @@ country, state or city files needed by a function call.
 
 ### Runtime Flow
 
+Node/backend entrypoint:
+
 1. `getCountries()` loads `dist/data/countries.json`.
 2. `getStatesOfCountry("US")` finds the country folder ending in `-US` and
    loads that country's `states.json`.
@@ -383,18 +489,29 @@ country, state or city files needed by a function call.
 4. Results are normalized into stable public TypeScript interfaces.
 5. Loaded results are cached in memory for repeated calls.
 
+Browser entrypoint:
+
+1. `createLocationClient({ baseUrl })` creates a fetch-based client.
+2. `getCountries()` fetches `${baseUrl}/countries.json`.
+3. `getStatesOfCountry("US")` fetches `${baseUrl}/manifest.json`, resolves the
+   country folder, then fetches that country's `states.json`.
+4. `getCitiesOfState("US", "CA")` uses the manifest to resolve the state folder,
+   then fetches that state's `cities.json`.
+5. Loaded results are cached in memory for repeated calls.
+
 ### Why This Design
 
 - Avoids one huge JavaScript bundle.
 - Keeps npm consumers independent from upstream runtime packages.
 - Allows lazy city loading.
 - Keeps the public API stable even if raw data fields vary.
-- Supports both ESM and CommonJS consumers.
+- Supports Node, backend, frontend and browser consumers.
 
 ### Tradeoffs
 
 - The npm package is larger because data is shipped with it.
-- The package depends on Node.js file-system APIs at runtime.
+- The default Node entrypoint depends on Node.js file-system APIs at runtime.
+- The browser entrypoint requires the data files to be served from a public URL.
 - Data accuracy depends on the packaged dataset version.
 - Full-country loading can be expensive for large countries.
 

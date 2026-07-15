@@ -1,6 +1,6 @@
 {
   "name": "countrycity-js",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A TypeScript library for countries, flags, states, provinces, cities, ISO codes, currencies and geographic search.",
   "keywords": [
     "country",
