@@ -1,7 +1,8 @@
 # CountryCity JS
 
-CountryCity JS is a TypeScript package for country, state/province, city,
-flag, ISO, currency, phone-code, coordinate and location search data.
+CountryCity JS is a TypeScript package for reliable country-wise location data
+in one place: countries, states/provinces, cities, flags, ISO codes,
+currencies, phone codes, coordinates and location search.
 
 The package ships local JSON data with the npm package. It does not require a
 runtime dependency on another country-state-city npm package.
@@ -22,6 +23,20 @@ runtime dependency on another country-state-city npm package.
 - Lazy data loading from packaged JSON files
 - Backend usage through Node.js file-system loading
 - Frontend usage through the browser-safe fetch client
+
+## Data Coverage
+
+CountryCity JS is intended to cover the common location fields needed when
+building production forms, dashboards, directories, marketplace onboarding,
+shipping flows and search experiences.
+
+| Level | Covered data |
+| --- | --- |
+| Countries | Name, ISO2, ISO3, numeric code, flag emoji, phone code, capital, currency code, currency name, currency symbol, top-level domain, native name, region, subregion, nationality, latitude, longitude and timezones where available |
+| States/provinces | Name, state/province code, subdivision type, country code, country name, latitude and longitude |
+| Cities | Name, state/province code, state/province name, country code, country name, latitude, longitude and timezone |
+| Search | Country search, state/province search and city search with limit, exact-match and case-sensitivity options |
+| Runtimes | Node.js, backend APIs, server-side rendering, scripts, CLIs and frontend/browser apps through `countrycity-js/browser` |
 
 ## Requirements
 
@@ -59,6 +74,10 @@ const californiaCities = await getCitiesOfState("US", "CA");
 const matches = await searchCountries("bangla");
 
 console.log(bangladesh?.name); // Bangladesh
+console.log(bangladesh?.iso3); // BGD
+console.log(bangladesh?.currency); // BDT
+console.log(bangladesh?.phoneCode); // 880
+console.log(bangladesh?.latitude, bangladesh?.longitude);
 console.log(countryCodeToFlag("BD"));
 console.log(usStates.length);
 console.log(californiaCities.some((city) => city.name === "Los Angeles"));
@@ -576,6 +595,8 @@ dist/
   index.js
   index.cjs
   index.d.ts
+  browser.js
+  browser.d.ts
   data/
 ```
 

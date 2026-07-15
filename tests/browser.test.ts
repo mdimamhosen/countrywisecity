@@ -47,10 +47,25 @@ describe("browser client", () => {
     const country = await locations.getCountryByCode("BD");
     const states = await locations.getStatesOfCountry("US");
     const cities = await locations.getCitiesOfState("US", "CA");
+    const losAngeles = cities.find((city) => city.name === "Los Angeles");
 
-    expect(country?.name).toBe("Bangladesh");
+    expect(country).toMatchObject({
+      name: "Bangladesh",
+      iso2: "BD",
+      iso3: "BGD",
+      phoneCode: "880",
+      currency: "BDT",
+      latitude: "24.00000000",
+      longitude: "90.00000000",
+    });
     expect(states.length).toBeGreaterThan(0);
-    expect(cities.some((city) => city.name === "Los Angeles")).toBe(true);
+    expect(losAngeles).toMatchObject({
+      name: "Los Angeles",
+      stateCode: "CA",
+      countryCode: "US",
+      latitude: "34.05223000",
+      longitude: "-118.24368000",
+    });
   });
 
   it("searches through the browser client", async () => {
