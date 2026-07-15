@@ -81,6 +81,68 @@ async function main() {
 main();
 ```
 
+## Browser Applications
+
+CountryCity JS uses Node.js file-system APIs to read packaged JSON files. Do not
+import it directly inside browser-only code such as React client components,
+Vite client bundles or plain browser scripts.
+
+Use it from your backend and expose the location data through API routes.
+
+### Example API Routes
+
+```typescript
+import express from "express";
+import {
+  getCitiesOfState,
+  getCountries,
+  getStatesOfCountry,
+} from "countrycity-js";
+
+const app = express();
+
+app.get("/api/locations/countries", async (_request, response) => {
+  response.json(await getCountries());
+});
+
+app.get("/api/locations/states/:countryCode", async (request, response) => {
+  response.json(await getStatesOfCountry(request.params.countryCode));
+});
+
+app.get(
+  "/api/locations/cities/:countryCode/:stateCode",
+  async (request, response) => {
+    response.json(
+      await getCitiesOfState(
+        request.params.countryCode,
+        request.params.stateCode,
+      ),
+    );
+  },
+);
+```
+
+Recommended route shape:
+
+```text
+GET /api/locations/countries
+GET /api/locations/states/:countryCode
+GET /api/locations/cities/:countryCode/:stateCode
+```
+
+### Cascading Select Pattern
+
+For forms, load data in this order:
+
+1. Load countries when the form opens.
+2. When a country is selected, load states/provinces for that country.
+3. When a state/province is selected, load cities for that state/province.
+4. Store the final label in the shape your product needs, for example
+   `"City, State, Country"`.
+
+This keeps the browser bundle small and avoids loading every city into the
+client at once.
+
 ## API Overview
 
 All data-loading and search functions are asynchronous.
@@ -417,8 +479,7 @@ Publish:
 npm publish --access public
 ```
 
-Because the package is scoped, public publishing requires `--access public` on
-the first publish.
+Use `--access public` for public publishing.
 
 ## Contributing
 
