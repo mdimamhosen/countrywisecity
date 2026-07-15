@@ -1,5 +1,5 @@
 {
-  "name": "countrywisecity",
+  "name": "@mdimamkhan/countrywisecity",
   "version": "1.0.0",
   "description": "A TypeScript library for countries, flags, states, provinces, cities, ISO codes, currencies and geographic search.",
   "keywords": [

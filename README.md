@@ -22,7 +22,7 @@ not require a runtime dependency on another country-state-city npm package.
 ## Installation
 
 ```bash
-npm install countrywisecity
+npm install @mdimamkhan/countrywisecity
 ```
 
 Replace the GitHub and author metadata in `package.json` with your real
@@ -38,7 +38,7 @@ import {
   getCountryByCode,
   getStatesOfCountry,
   searchCountries,
-} from "countrywisecity";
+} from "@mdimamkhan/countrywisecity";
 
 const countries = await getCountries();
 const bangladesh = await getCountryByCode("BD");
@@ -101,7 +101,7 @@ const {
   getCountries,
   getStatesOfCountry,
   getCitiesOfState,
-} = require("countrywisecity");
+} = require("@mdimamkhan/countrywisecity");
 
 async function main() {
   const countries = await getCountries();
