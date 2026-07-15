@@ -1,6 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 
 import { safeCountryCodeToFlag } from "./flags.js";
 import type {
@@ -14,11 +13,7 @@ import type {
 
 type SourceRecord = Record<string, unknown>;
 
-const moduleDirectory =
-  typeof __dirname === "string"
-    ? __dirname
-    : dirname(fileURLToPath(import.meta.url));
-const dataDirectory = join(moduleDirectory, "data");
+const dataDirectory = join(__dirname, "data");
 
 let countryDirectoryCache: Map<string, string> | null = null;
 const stateDirectoryCache = new Map<string, Map<string, string>>();
