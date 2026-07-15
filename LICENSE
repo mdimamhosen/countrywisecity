@@ -1,0 +1,21 @@
+Open Data Commons Open Database License (ODbL) v1.0
+
+This package includes functionality that accesses geographic data from
+the CountryStateCity project:
+
+https://github.com/dr5hn/countries-states-cities-database
+
+The geographic database is licensed under the Open Data Commons
+Open Database License version 1.0.
+
+You may copy, distribute, use and adapt the database, provided that:
+
+1. You attribute the CountryStateCity project.
+2. You keep adapted versions of the database open.
+3. You distribute adapted databases under the same ODbL license.
+
+The original software code written specifically for this package may
+be used under the terms described in the package repository.
+
+Full ODbL text:
+https://opendatacommons.org/licenses/odbl/1-0/

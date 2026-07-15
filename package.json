@@ -1,0 +1,72 @@
+{
+  "name": "countrywisecity",
+  "version": "1.0.0",
+  "description": "A TypeScript library for countries, flags, states, provinces, cities, ISO codes, currencies and geographic search.",
+  "keywords": [
+    "country",
+    "countries",
+    "state",
+    "states",
+    "province",
+    "city",
+    "cities",
+    "flag",
+    "flags",
+    "iso",
+    "geography",
+    "location",
+    "typescript"
+  ],
+  "author": {
+    "name": "mimamhosen",
+    "url": "https://github.com/mdimamhosen"
+  },
+  "license": "ODbL-1.0",
+  "homepage": "https://github.com/mdimamhosen/countrywisecity#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdimamhosen/countrywisecity.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mdimamhosen/countrywisecity/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsup src/index.ts --format esm,cjs --sourcemap --clean && tsc -p tsconfig.build.json --emitDeclarationOnly && npm run copy:data",
+    "copy:data": "node scripts/copy-data.cjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "prepublishOnly": "npm run check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsup": "^8.5.1",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}
