@@ -2,11 +2,13 @@ import { defineConfig } from "tsup";
 
 export default defineConfig([
   {
-    entry: ["src/index.ts"],
+    entry: {
+      index: "src/index.ts",
+    },
     format: ["esm"],
     target: "es2022",
     sourcemap: true,
-    clean: true,
+    clean: false,
     banner: {
       js: [
         'import { dirname as __countrywiseDirname } from "node:path";',
@@ -16,7 +18,18 @@ export default defineConfig([
     },
   },
   {
-    entry: ["src/index.ts"],
+    entry: {
+      browser: "src/browser.ts",
+    },
+    format: ["esm"],
+    target: "es2022",
+    sourcemap: true,
+    clean: false,
+  },
+  {
+    entry: {
+      index: "src/index.ts",
+    },
     format: ["cjs"],
     target: "es2022",
     sourcemap: true,

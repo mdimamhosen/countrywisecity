@@ -39,7 +39,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js"
+    },
+    "./data/*": "./dist/data/*"
   },
   "files": [
     "dist",
@@ -49,8 +54,9 @@
   "sideEffects": false,
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "build": "npm run clean && tsup && tsc -p tsconfig.build.json --emitDeclarationOnly && npm run copy:data",
+    "build": "npm run clean && npm run data:manifest && tsup && tsc -p tsconfig.build.json --emitDeclarationOnly && npm run copy:data",
     "copy:data": "node scripts/copy-data.cjs",
+    "data:manifest": "node scripts/generate-manifest.cjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
