@@ -1,6 +1,6 @@
 {
   "name": "countrycity-js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A TypeScript library for countries, flags, states, provinces, cities, ISO codes, currencies and geographic search.",
   "keywords": [
     "country",
@@ -54,7 +54,7 @@
   "sideEffects": false,
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "build": "npm run clean && npm run data:manifest && tsup && tsc -p tsconfig.build.json --emitDeclarationOnly && npm run copy:data",
+    "build": "node init && npm run clean && npm run data:manifest && tsup && tsc -p tsconfig.build.json --emitDeclarationOnly && npm run copy:data",
     "copy:data": "node scripts/copy-data.cjs",
     "data:manifest": "node scripts/generate-manifest.cjs",
     "typecheck": "tsc --noEmit",
@@ -71,6 +71,8 @@
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
+    "dotenv": "^8.2.0",
+    "node-fetch": "^3.3.2",
     "tsup": "^8.5.1",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
